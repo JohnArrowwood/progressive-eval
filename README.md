@@ -54,7 +54,7 @@ Variables are evaluated as a set.  The set is processed in dependency order
 so that if variable `A` depends on `B`, and `B` depends on `C`, then `C` will 
 be evaluated first, then `B`, and finally `A`.
 
-## Forward References
+### Forward References
 
 As illustrated in the example, a variable can be defined at one level of the
 hierarchy that depends on variables not defined until lower in the hierarchy.  
