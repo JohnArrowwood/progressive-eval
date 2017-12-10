@@ -97,7 +97,7 @@ the dependency loop is broken, and so the variables all get assigned:
 
 ## Installing
 
-    npm install --save progressive-evaluate
+    npm install --save progressive-eval
 
 ## Usage
 
