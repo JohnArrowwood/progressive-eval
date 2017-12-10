@@ -1,0 +1,7 @@
+node_modules
+coverage
+dist
+typings
+.nyc_output
+*.js.map
+*.js

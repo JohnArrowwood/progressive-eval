@@ -1,0 +1,49 @@
+{
+  "name": "progressive-eval",
+  "version": "1.0.0",
+  "description": "Extend expression-eval for evaluating sets of variables, and sets of sets",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "nyc mocha test/*.test.ts test/**/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnArrowwood/progressive-eval.git"
+  },
+  "author": "John Arrowwood",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohnArrowwood/progressive-eval/issues"
+  },
+  "homepage": "https://github.com/JohnArrowwood/progressive-eval#readme",
+  "dependencies": {
+    "expression-eval": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.8",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.54",
+    "chai": "^4.1.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
+    "source-map-support": "^0.5.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.2"
+  },
+  "nyc": {
+    "include": ["src/**/*.ts"],
+    "extension": [".ts"],
+    "require": ["ts-node/register"],
+    "reporter": ["text-summary","html"],
+    "sourceMap": true,
+    "instrument": true,
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 99,
+    "statements": 99,
+    "functions": 99,
+    "branches": 99
+  }
+}
