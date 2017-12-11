@@ -133,6 +133,7 @@ export class Variable {
     value( value: any ): Variable {
         this._expr = JSON.stringify( value );
         this._ast = new Literal( value );
+        this._dep = {};
         this._error = false;
         this._message = "";
         return this;

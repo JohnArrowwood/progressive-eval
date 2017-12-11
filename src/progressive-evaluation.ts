@@ -33,8 +33,9 @@ export class ProgressiveEvaluation {
      * @param vars - the set of variables to evaluate
      * @param context - the context in which to evaluate them
      */
-    static from( vars: SetOfVariables, context: VariableValues ): ProgressiveEvaluation {
+    static from( vars: SetOfVariables, context?: VariableValues ): ProgressiveEvaluation {
         let pe = new ProgressiveEvaluation();
+        if ( context === null || context === undefined ) context = {};
         pe._previous = null;
         pe._context = Object.assign({},context);
         pe._definitions = Object.assign({},vars);
