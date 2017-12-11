@@ -7,27 +7,20 @@ import { Literal } from './ast/literal';
  */
 
 /**
- * NOTE: cyclic dependencies are not explicitly supported because there is no 
- * way to resolve them without resorting to iterative evaluation, which we are
- * not doing.  However, if we can BREAK the cycle by injecting the value from
- * the context, we will do that.  Otherwise, if you have a cyclic dependency,
- * you get what you get
+ * NOTE: cyclic dependencies are not explicitly supported because there is 
+ * no way to resolve them without resorting to iterative evaluation, which 
+ * we are not doing.  However, if we can BREAK the cycle by injecting the 
+ * value from the context, we will do that.  Otherwise, if you have a 
+ * cyclic dependency, you get what you get
  */
-export function evaluationOrder( vars: SetOfVariables, context: VariableValues ): Array<Variable> {
+
+export function evaluationOrder( vars: SetOfVariables, context: VariableValues, ignoreSelfRef: boolean = false, preSort: Function = null ): Array<Variable> {
 
     let order: Array<Variable> = [];
     let added_vars: Set<VariableName> = new Set<VariableName>();     
     let added_context: Set<VariableName> = new Set<VariableName>();;
     let numAdded = 0;
     
-    let requires = {};
-    for ( var name in vars ) {
-      for ( var dep in vars[name].dep ) {
-        if ( ! requires.hasOwnProperty(dep) ) requires[dep] = {};
-        requires[dep][name] = undefined;
-      }
-    }
-
     function addIfReady( v: Variable, seq: Set<VariableName> ): boolean {
         
         // skip if it has already been added
@@ -38,6 +31,7 @@ export function evaluationOrder( vars: SetOfVariables, context: VariableValues )
         
         let next = new Set<VariableName>(seq).add(v.name);
         for ( let dep in v.dep ) {
+            if ( ignoreSelfRef && dep === v.name ) continue;
             if ( seq.has(dep) ) { // cycle detected
                 if ( context.hasOwnProperty( dep ) ) {
                     if ( ! added_context.has( dep ) ) { 
@@ -64,7 +58,16 @@ export function evaluationOrder( vars: SetOfVariables, context: VariableValues )
         added_vars.add( v.name );
         numAdded++;
     }
+
     let names: Array<VariableName> = Object.keys(vars);
+    if ( preSort ) {
+        let preOrder = [];
+        for ( let name of names ) {
+            preOrder.push( vars[name] );
+        }
+        preSort( preOrder );
+        names = preOrder.map( v => v.name );
+    }
     do {
       numAdded = 0;
       for ( let name of names ) {
@@ -76,26 +79,7 @@ export function evaluationOrder( vars: SetOfVariables, context: VariableValues )
     // anything not in order is not calculable
     return order;
 
-    /*
-    let name: VariableName;
-    let v: Variable;
-    let list = [];
-    let prefix = [];
-    for ( name in vars ) {
-      list.push( vars[name] );      
-      if ( vars[name].recursiveDependencies(vars).hasOwnProperty(name) ) {
-        if ( context.hasOwnProperty( name ) ) {
-          prefix.push( new Variable( name ).value( context[name] ) );
-        }
-      }
-    }
-    list.sort( (a,b) => {
-      var a_requires_b = a.dep.hasOwnProperty(b.name);
-      var b_requires_a = b.dep.hasOwnProperty(a.name);
-      return ( a_requires_b === b_requires_a ? 0 : a_requires_b ? 1 : -1 ); 
-    });
-    return prefix.concat(list);
-    */
 }
-  
+        
+
   

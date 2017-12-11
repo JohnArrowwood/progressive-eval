@@ -138,4 +138,49 @@ describe("evaluationOrder", () => {
 
     });
 
+    context( "ignoring self references", function() {
+
+        it( 'should not treat self-references as dependencies', function() {
+            let vars = buildSet({
+                A:'B && ! C',
+                B:'B === false',
+                C:'C === true' 
+            });
+            let sorted = evaluationOrder( vars, {}, true );
+            let order = names( sorted );
+            expect( order ).to.have.same.members( ['A','B','C'] );
+            expect( order.indexOf('A') ).to.equal(2);
+        });
+
+    });
+
+    context( "custom pre-sort", function() {
+
+        it( 'should influence the final sort order', function() {
+            let vars = buildSet({
+                E:'1',
+                B:'2',
+                F:'G+3',
+                C:'4',
+                G:'5', 
+                A:'6',
+                D:'7',
+            });
+            function custom(list) {
+                list.sort( (a,b) => ( a < b ? -1 : ( a > b ? 1 : 0 ) ) );
+            }
+            let sorted = evaluationOrder( vars, {}, false, custom );
+            let order = names( sorted );
+            expect( order ).to.have.same.members( ['A','B','C','D','E','F','G'] );
+            expect( order.indexOf('A') ).to.equal(0);
+            expect( order.indexOf('B') ).to.equal(1);
+            expect( order.indexOf('C') ).to.equal(2);
+            expect( order.indexOf('D') ).to.equal(3);
+            expect( order.indexOf('E') ).to.equal(4);
+            expect( order.indexOf('F') ).to.equal(6);
+            expect( order.indexOf('G') ).to.equal(5);
+        });
+
+    });
+
 });
