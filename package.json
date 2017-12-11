@@ -1,6 +1,6 @@
 {
   "name": "progressive-eval",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Extend expression-eval for evaluating sets of variables, and sets of sets",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,10 +33,19 @@
     "typescript": "^2.6.2"
   },
   "nyc": {
-    "include": ["src/**/*.ts"],
-    "extension": [".ts"],
-    "require": ["ts-node/register"],
-    "reporter": ["text-summary","html"],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
     "sourceMap": true,
     "instrument": true,
     "check-coverage": true,
