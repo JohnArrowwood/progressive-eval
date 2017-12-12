@@ -11,7 +11,9 @@ import {
 } from '../src';
 
 function given( expr ) {
-    return Object.keys( dependencies( parse( expr ) ) );
+    var result = dependencies( parse( expr ) );
+    if ( result ) return Object.keys( dependencies( parse( expr ) ) );
+    else          return [];
 }
 describe("dependencies", () => {
 
@@ -103,8 +105,8 @@ describe("dependencies", () => {
 
     context( 'ThisExpression', function() {
 
-        it( 'should return only \'this\'', function() {
-            expect( given('this') ).to.have.same.members( ['this'] );
+        it( 'should return no dependencies', function() {
+            expect( given('this') ).to.be.empty;
         });
 
     });
@@ -144,5 +146,12 @@ describe("dependencies", () => {
         });
 
     });
+
+    context( "ParseError", function() {
+        it( 'should return none', function() {
+            let ast = new ParseError();
+            expect( dependencies( ast ) ).to.be.empty;
+        })
+    })
 
 });

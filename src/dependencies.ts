@@ -30,7 +30,7 @@ export function dependencies(ast: AST): Dependencies {
         case "UnaryExpression":       return dependencies(ast.argument);
         case "ArrayExpression":       return flatten( ast.elements.map( dependencies ) );
         case "MemberExpression":      return dependencies(ast.object);
-        case "ThisExpression":        return only('this');
+        case "ThisExpression":        return NONE;
         case "CallExpression":        return merge( dependencies(ast.callee), flatten( ast.arguments.map( dependencies ) ) );
         case "ConditionalExpression": return merge( dependencies(ast.test), dependencies(ast.consequent), dependencies(ast.alternate) );
         default:                      return NONE;
