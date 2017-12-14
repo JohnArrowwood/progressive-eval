@@ -23,6 +23,24 @@ describe( 'Variable.expr and related fields (.error, .message, .dep)', function(
         expect( (v.ast as Literal).value ).to.equal( "" );
     });
 
+    it( 'should default to empty string literal if expression is undefined', function() {
+        let v = Variable.create( 'name', undefined );
+        expect( v.ast.type ).to.equal( "Literal" );
+        expect( (v.ast as Literal).value ).to.equal( "" );
+    });
+
+    it( 'should default to empty string literal if expression is an empty string', function() {
+        let v = Variable.create( 'name', '' );
+        expect( v.ast.type ).to.equal( "Literal" );
+        expect( (v.ast as Literal).value ).to.equal( "" );
+    });
+
+    it( 'should default to empty string literal if expression is an effectively empty string', function() {
+        let v = Variable.create( 'name', ' ' );
+        expect( v.ast.type ).to.equal( "Literal" );
+        expect( (v.ast as Literal).value ).to.equal( "" );
+    });
+
     it( 'should parse the expression', function() {
         let v = new Variable();
         v.name = "foo";

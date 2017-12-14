@@ -34,10 +34,19 @@ describe("expression-eval wrapper: evaluate", () => {
         it( 'should return undefined when the AST is a Parse Error (e.g. unrecognized type', function() {
             let ast = new ParseError();
             let result = evaluate( ast, {} );
-            expect( result ).to.be.undefined
+            expect( result ).to.be.undefined;
         });
     
     });
 
+    context( 'context parameter is optional', function() {
+
+        it( 'should assume an empty context', function() {
+            let ast = parse( 'one + two' );
+            let result = evaluate( ast );
+            expect( result ).to.be.NaN;
+        });
+
+    });
 
 });

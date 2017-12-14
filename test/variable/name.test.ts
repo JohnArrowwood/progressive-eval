@@ -6,13 +6,27 @@ import { Variable } from '../../src/index';
 function verify( name: string, ok: boolean ) {
     let v = new Variable();
     v.name = name;
-    expect( v.name ).to.equal( name );
-    if ( ok !== null ) {
-        expect( v.nameOK ).to.equal( ok );
-    }
+    if ( name )        expect( v.name ).to.equal( name.trim() );
+    if ( ok !== null ) expect( v.nameOK ).to.equal( ok );
 }
 
 describe( 'Variable.name and Variable.nameOK', function() {
+
+    it( 'should reject name being null', function() {
+        verify( null, false );
+    });
+
+    it( 'should reject name being undefined', function() {
+        verify( undefined, false );
+    });
+
+    it( 'should reject name being an empty string', function() {
+        verify( '', false );
+    });
+
+    it( 'should reject name being an effectively empty string', function() {
+        verify( ' ', false );
+    });
 
     it( 'should allow a name consisting of only letters', function() {
         verify( 'abc', true );

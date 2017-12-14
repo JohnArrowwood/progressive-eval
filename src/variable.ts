@@ -30,8 +30,8 @@ export class Variable {
         name: VariableName = '',
         expr: Expression = ''
     ) {
-        if ( name !== '' ) this.name = name;
-        if ( expr !== '' ) this.expr = expr;
+        this.name = name;
+        this.expr = expr;
     }
 
     static create( name: VariableName, expr: Expression ) {
@@ -41,8 +41,13 @@ export class Variable {
     // the name of the variable
     get name() { return this._name }
     set name( name: VariableName ) {
-        this._name = name;
-        this._name_ok = IDENTIFIER.test( name );
+        if ( ! name ) {
+            this._name_ok = false;
+            this._name = '';
+        } else {
+            this._name = name.trim();
+            this._name_ok = this._name != '' && IDENTIFIER.test( this._name );
+        }
     }
 
     // whether or not the name is a valid identifier
@@ -50,11 +55,12 @@ export class Variable {
 
     // the expression that defines its value
     get expr() { return this._expr }
-    set expr( expr: Expression ) {
-        this._expr = expr;
-        if ( ! expr ) expr = "''";
+    set expr( expression: Expression ) {
+        if ( ! expression ) expression = "''";
+        this._expr = expression.trim();
+        if ( this._expr === '' ) this._expr = "''";
         try {
-            this._ast     = parse(expr);
+            this._ast     = parse(this._expr);
             this._dep     = dependencies( this.ast );
             this._error   = false;
             this._message = '';
@@ -148,8 +154,20 @@ export class Variable {
      * 
      * @param serialized - object with fields but no methods
      */
-    static deserialize( serialized: Variable ): Variable {
-        return Object.assign( new Variable(), serialized );
+    static deserialize( serialized: any ): Variable {
+        let complain = () => { throw new Error( 'Object is not a serialized variable: ' + JSON.stringify( serialized ) ); };
+
+        let name;
+        if      ( serialized.hasOwnProperty( '_name' ) ) name = serialized._name;
+        else if ( serialized.hasOwnProperty( 'name'  ) ) name = serialized.name;  // transition support
+        else complain();
+
+        let expr;
+        if      ( serialized.hasOwnProperty( '_expr' ) ) expr = serialized._expr;
+        else if ( serialized.hasOwnProperty( 'expr'  ) ) expr = serialized.expr;  // transition support
+        else complain();
+        
+        return new Variable( name, expr );
     }
 
 

@@ -8,7 +8,7 @@ export function buildSet(obj): SetOfVariables {
     for( let name in obj ) {
        let v = new Variable();
        v.name = name;
-       v.expr = obj[name];
+       v.expr = obj[name].toString();
        result[name] = v;
     }
     return result;

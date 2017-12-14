@@ -19,7 +19,7 @@ export function parse( e: Expression ): AST {
  * @param e - Expression or pre-parsed expression
  * @param context - interpretation context
  */
-export function evaluate( e: Expression | AST, context: VariableValues ) {
+export function evaluate( e: Expression | AST, context: VariableValues = {} ) {
     let ast;
     if ( typeof( e ) === 'string' ) {
         ast = expr.parse( e );
